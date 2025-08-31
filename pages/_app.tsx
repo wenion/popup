@@ -1,7 +1,6 @@
 import type { AppProps } from "next/app";
 
 import { HeroUIProvider } from "@heroui/system";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
 
 import { fontSans, fontMono } from "@/config/fonts";
@@ -12,9 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <HeroUIProvider navigate={router.push}>
-      <NextThemesProvider attribute="class" defaultTheme="light">
-        <Component {...pageProps} />
-      </NextThemesProvider>
+      <Component {...pageProps} />
     </HeroUIProvider>
   );
 }
