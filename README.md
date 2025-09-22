@@ -62,10 +62,12 @@ const nextConfig = {
   assetPrefix: "/dist",
   basePath: "/dist",
   reactStrictMode: true,
+  images: { unoptimized: true },
 };
 ```
 
 copy dist/ to extension folder
+
 
 ## License
 

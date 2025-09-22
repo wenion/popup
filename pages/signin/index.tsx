@@ -1,24 +1,5 @@
-
 import Image from "next/image";
 import DefaultLayout from "@/layouts/default";
-
-function Logo({ className = "" }: { className?: string }) {
-  return (
-    <div className="flex items-center">
-      <svg
-        aria-hidden="true"
-        className={className}
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Simplified wordmark + green dot */}
-        <circle cx="16" cy="16" r="12" fill="#06b6d4" />
-        {/* <rect x="40" y="8" width="96" height="16" rx="8" fill="#111827"/> */}
-      </svg>
-      <p>Trace Extension</p>
-    </div>
-  );
-}
 
 export default function DocsPage() {
   const notice = "Extension is active, but key features are missing.";
@@ -27,16 +8,15 @@ export default function DocsPage() {
     <DefaultLayout>
       <div className={"w-full bg-white shadow-sm ring-1 ring-black/5"}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
-          <div className="max-xl:hidden">
-            <Image
-              className="dark:invert"
-              src="/trace_logo.svg"
-              alt="Next.js logo"
-              width={56}
-              height={20}
-              priority
-            />
-          </div>
+          <Image
+            className="dark:invert"
+            src="trace_logo.svg"
+            alt="Next.js logo"
+            width={56}
+            height={20}
+            priority
+            unoptimized
+          />
           <p className="px-4 text-xs text-slate-600">Track, analyse, and understand your writing habits</p>
         </div>
 

@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import {
   Navbar as HeroUINavbar,
@@ -24,7 +23,6 @@ import {
   DiscordIcon,
   HeartFilledIcon,
   SearchIcon,
-  Logo,
 } from "@/components/icons";
 
 export const Navbar = () => {
