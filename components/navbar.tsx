@@ -1,3 +1,5 @@
+
+import Image from "next/image";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -52,8 +54,17 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <div className="max-xl:hidden">
+              <Image
+                className="dark:invert"
+                src="/trace_logo.svg"
+                alt="Next.js logo"
+                width={120}
+                height={38}
+                priority
+              />
+            </div>
+            <p className="font-bold text-inherit">Trace Extension</p>
           </NextLink>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">

@@ -50,6 +50,23 @@ public-hoist-pattern[]=*@heroui/*
 
 After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
 
+### Build
+```bash
+const nextConfig = {
+  output: "export",
+
+  // Optional: Change the output directory `out` -> `dist`
+  distDir: "dist",
+
+  // Make all asset URLs include /dist so they work when popup is dist/index.html
+  assetPrefix: "/dist",
+  basePath: "/dist",
+  reactStrictMode: true,
+};
+```
+
+copy dist/ to extension folder
+
 ## License
 
 Licensed under the [MIT license](https://github.com/heroui-inc/next-pages-template/blob/main/LICENSE).
