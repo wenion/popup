@@ -10,6 +10,9 @@ const nextConfig = {
   // basePath: "/dist",
   // reactStrictMode: true,
   // images: { unoptimized: true },
+  publicRuntimeConfig: {
+    homepage: "http://localhost:3000/login",
+  },
 };
 
 module.exports = nextConfig;
