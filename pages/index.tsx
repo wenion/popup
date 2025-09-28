@@ -1,12 +1,13 @@
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useAppContext } from "@/components/context";
+import { SignIn } from "@/components/signin";
+import { Home } from "@/components/home";
 
 export default function IndexPage() {
-  const router = useRouter();
+  const { user } = useAppContext();
 
-  useEffect(() => {
-    router.push("/signin"); // redirect to default after mount
-  }, [router]);
-
-  return null;
+  return (
+    <div className="relative flex flex-col w-xs bg-white">
+      {user && user.name ? <Home username={user.name} /> : <SignIn />}
+    </div>
+  );
 }

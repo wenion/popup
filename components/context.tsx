@@ -1,17 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useMessenger } from "./messenger";
+import type { UserContext } from "./types";
 
-type ContextType = {
-  expires: string | null;
-  user: {
-    name: string;
-    email: string;
-    image: string;
-  } | null;
-};
-
-const Context = createContext<ContextType | null>(null);
+const Context = createContext<UserContext>({expires: null, user: null});
 
 export function useAppContext() {
   const context = useContext(Context);
@@ -22,13 +15,40 @@ export function useAppContext() {
 }
 
 export function ContextProvider({ children, }: { children: React.ReactNode; }) {
+  const [value, setValue] = useState<UserContext>({ expires: null, user: null });
+
+  const onAuthMessageUpdated = useCallback((message: any) => {
+    if (message.type === "storage-changed" && message.name === "auth") {
+      if (message.payload) {
+        // Update context state expires and user
+        setValue({
+          expires: message.payload.expires,
+          user: message.payload.user,
+        });
+      } else {
+        setValue({ expires: null, user: null });
+      }
+    }
+  }, []);
+
+  const { isReady, sendMessage } = useMessenger(onAuthMessageUpdated);
+
+  useEffect(() => {
+    if (!isReady) return;
+    // Initial fetch of auth state from storage
+    sendMessage({ type: "get-storage", name: "auth" })
+      .then((data) => {
+        if (data) {
+          onAuthMessageUpdated(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to get auth from storage:", err);
+      });
+  }, [isReady, sendMessage]);
+
   return (
-    <Context.Provider
-      value={{
-        expires: null,
-        user: null,
-      }}
-    >
+    <Context.Provider value={value}>
       {children}
     </Context.Provider>
   );

@@ -1,15 +1,21 @@
 import getConfig from "next/config";
 import Image from "next/image";
-import DefaultLayout from "@/layouts/default";
 
-export default function DocsPage() {
+export function SignIn() {
   const notice = "Extension is active, but key features are missing.";
 
   const { publicRuntimeConfig } = getConfig();
   const homepage = publicRuntimeConfig.homepage;
 
+  const onSignInClick = () => {
+    if (window.location.href === homepage) {
+      // already on homepage → do nothing
+      return;
+    }
+    window.open(homepage, "_blank");
+  };
+
   return (
-    <DefaultLayout>
       <div className={"w-full bg-white shadow-sm ring-1 ring-black/5"}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
           <Image
@@ -38,9 +44,7 @@ export default function DocsPage() {
             <button
               type="button"
               className="inline-flex cursor-pointer w-full items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold bg-slate-900 hover:bg-slate-700 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/50"
-              onClick={() => {
-                window.open(homepage, "_blank");
-              }}
+              onClick={onSignInClick}
             >
               Sign in
             </button>
@@ -61,6 +65,5 @@ export default function DocsPage() {
           </button>
         </div>
       </div>
-    </DefaultLayout>
   );
 }
