@@ -5,14 +5,19 @@ export function SignIn() {
   const notice = "Extension is active, but key features are missing.";
 
   const { publicRuntimeConfig } = getConfig();
-  const homepage = publicRuntimeConfig.homepage;
+  const loginPage = new URL(publicRuntimeConfig.loginPage);
 
   const onSignInClick = () => {
-    if (window.location.href === homepage) {
-      // already on homepage → do nothing
-      return;
-    }
-    window.open(homepage, "_blank");
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (tab) {
+        if (tab.url === loginPage.href) {
+          window.close(); // closes the popup
+          return;
+        }
+        chrome.tabs.create({ url: loginPage.href });
+      }
+    });
   };
 
   return (

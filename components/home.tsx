@@ -1,7 +1,36 @@
+import { useMemo } from "react";
+import getConfig from "next/config";
 import Image from "next/image";
 
-export function Home({username}: {username: string}) {
+import { useAppContext } from "@/components/context";
+
+export function Home() {
+  const { user } = useAppContext();
+
   const notice = "Welcome";
+  const { publicRuntimeConfig } = getConfig();
+  const homepage = new URL(publicRuntimeConfig.homepage);
+
+  const onHomeClick = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (tab) {
+        if (tab.url === homepage.href) {
+          window.close(); // closes the popup
+          return;
+        }
+        chrome.tabs.create({ url: homepage.href });
+      }
+    });
+  };
+
+  const userName = useMemo(() => {
+    if (user && user.email) {
+      const username = user.email.split("@")[0];
+      const first = username.split(/[._\s-]+/)[0];
+      return first.charAt(0).toUpperCase() + first.slice(1);
+    }
+  }, [user]);
 
   return (
     <div className={"w-full bg-white shadow-sm ring-1 ring-black/5"}>
@@ -24,11 +53,19 @@ export function Home({username}: {username: string}) {
         <div className="rounded-lg bg-slate-50 px-2 py-2">
           <div className="flex items-start gap-2 items-center justify-center">
             {/* <BellIcon className="min-w-6 h-6" /> */}
-            <p className="text-lg font-medium text-slate-600 text-center">{notice}, {username}!</p>
+            <p className="text-lg font-medium text-slate-600 text-center">{notice}, {userName}!</p>
           </div>
         </div>
       </div>
-      <div className="h-12 w-full"/>
+      <div className="flex py-2 items-center justify-center h-20 w-full">
+        <button
+          type="button"
+          className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold bg-slate-900 hover:bg-slate-700 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/50"
+          onClick={onHomeClick}
+        >
+          Go to Dashboard
+        </button>
+      </div>
     </div>
   );
 }

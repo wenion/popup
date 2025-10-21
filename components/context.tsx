@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useMessenger } from "./messenger";
-import type { UserContext } from "./types";
+import { createContext, useContext, useState } from "react";
 
-const Context = createContext<UserContext>({expires: null, user: null});
+import type { UserContext, UserInfo } from "./types";
+import { useAuthSession } from "./useAuthSession";
+
+const Context = createContext<UserContext>({ user: null });
 
 export function useAppContext() {
   const context = useContext(Context);
@@ -15,40 +16,22 @@ export function useAppContext() {
 }
 
 export function ContextProvider({ children, }: { children: React.ReactNode; }) {
-  const [value, setValue] = useState<UserContext>({ expires: null, user: null });
+  const [user, setUser] = useState<UserInfo | null>(null);
 
-  const onAuthMessageUpdated = useCallback((message: any) => {
-    if (message.type === "storage-changed" && message.name === "auth") {
-      if (message.payload) {
-        // Update context state expires and user
-        setValue({
-          expires: message.payload.expires,
-          user: message.payload.user,
-        });
+  useAuthSession((storageName, session) => {
+    if (storageName === "session") {
+      if (session && session.user) {
+        setUser(session.user);
       } else {
-        setValue({ expires: null, user: null });
+        setUser(null);
       }
     }
-  }, []);
-
-  const { isReady, sendMessage } = useMessenger(onAuthMessageUpdated);
-
-  useEffect(() => {
-    if (!isReady) return;
-    // Initial fetch of auth state from storage
-    sendMessage({ type: "get-storage", name: "auth" })
-      .then((data) => {
-        if (data) {
-          onAuthMessageUpdated(data);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to get auth from storage:", err);
-      });
-  }, [isReady, sendMessage]);
+  });
 
   return (
-    <Context.Provider value={value}>
+    <Context.Provider value={{
+      user,
+    }}>
       {children}
     </Context.Provider>
   );
