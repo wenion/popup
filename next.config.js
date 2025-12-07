@@ -11,8 +11,8 @@ const nextConfig = {
   reactStrictMode: true,
   images: { unoptimized: true },
   publicRuntimeConfig: {
-    homepage: "http://127.0.0.1:3000/",
-    loginPage: "http://127.0.0.1:3000/login",
+    homepage: "https://colam.kmass.cloud.edu.au/",
+    loginPage: "https://colam.kmass.cloud.edu.au/login",
   },
 };
 
