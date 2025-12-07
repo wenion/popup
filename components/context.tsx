@@ -31,7 +31,8 @@ export function ContextProvider({ children, }: { children: React.ReactNode; }) {
           return;
         }
       }
-      setUser(session.user);
+      if (session && session.user) setUser(session.user);
+      else setUser(null);
     });
 
     chrome.storage.onChanged.addListener((changes, area) => {
@@ -48,7 +49,8 @@ export function ContextProvider({ children, }: { children: React.ReactNode; }) {
             return;
           }
         }
-        setUser(session.user);
+        if (session && session.user) setUser(session.user);
+        else setUser(null);
       }
     });
   }, []);
