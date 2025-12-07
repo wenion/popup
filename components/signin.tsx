@@ -2,12 +2,11 @@ import getConfig from "next/config";
 import Image from "next/image";
 
 export function SignIn() {
-  const notice = "Extension is active, but key features are missing.";
-
   const { publicRuntimeConfig } = getConfig();
   const loginPage = new URL(publicRuntimeConfig.loginPage);
 
   const onSignInClick = () => {
+    chrome.storage.sync.set({ session: null});
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
       if (tab) {
@@ -36,15 +35,7 @@ export function SignIn() {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-4 px-8 pt-4">
-          {/* Subtle brand banner */}
-          <div className="rounded-lg bg-slate-50 px-2 py-2">
-            <div className="flex items-start gap-2">
-              {/* <BellIcon className="min-w-6 h-6" /> */}
-              <p className="text-sm font-medium text-slate-600 text-center">{notice}</p>
-            </div>
-          </div>
-
+        <div className="flex flex-col gap-4 px-8 py-4">
           <div className="flex flex-col gap-2">
             <button
               type="button"
@@ -54,20 +45,6 @@ export function SignIn() {
               Sign in
             </button>
           </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-1 py-2">
-          <span className="text-xs text-slate-500">
-            {"Don't have an account?"}
-          </span>
-          <button
-            type="button"
-            className={
-              "flex px-1 text-xs text-slate-500 items-center justify-center bg-slate-100 border border-slate-400 rounded-sm hover:bg-slate-200 cursor-pointer"
-            }
-          >
-            Sign up
-          </button>
         </div>
       </div>
   );

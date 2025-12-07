@@ -30,6 +30,7 @@ export function Home() {
       const first = username.split(/[._\s-]+/)[0];
       return first.charAt(0).toUpperCase() + first.slice(1);
     }
+    return "";
   }, [user]);
 
   return (

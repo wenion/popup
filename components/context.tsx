@@ -1,11 +1,10 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import type { UserContext, UserInfo } from "./types";
-import { useAuthSession } from "./useAuthSession";
 
-const Context = createContext<UserContext>({ user: null });
+const Context = createContext<UserContext | null>(null);
 
 export function useAppContext() {
   const context = useContext(Context);
@@ -18,20 +17,52 @@ export function useAppContext() {
 export function ContextProvider({ children, }: { children: React.ReactNode; }) {
   const [user, setUser] = useState<UserInfo | null>(null);
 
-  useAuthSession((storageName, session) => {
-    if (storageName === "session") {
-      if (session && session.user) {
-        setUser(session.user);
-      } else {
-        setUser(null);
+  useEffect(() => {
+    chrome.storage.sync.get("session", (result) => {
+      const raw = result.session;
+      if (!raw) setUser(null);
+
+      let session = raw;
+      if (typeof raw === "string") {
+        try {
+          session = JSON.parse(raw);
+        } catch (e) {
+          console.error("Invalid session JSON:", raw, e);
+          return;
+        }
       }
-    }
-  });
+      setUser(session.user);
+    });
+
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === "sync" && changes.session) {
+        const raw = changes.session.newValue;
+        if (!raw) setUser(null);
+
+        let session = raw;
+        if (typeof raw === "string") {
+          try {
+            session = JSON.parse(raw);
+          } catch (e) {
+            console.error("Invalid session JSON:", raw, e);
+            return;
+          }
+        }
+        setUser(session.user);
+      }
+    });
+  }, []);
+
+  const value = useMemo<UserContext>(
+    () => {
+      return{
+      user: user,
+    }},
+    [user]
+  );
 
   return (
-    <Context.Provider value={{
-      user,
-    }}>
+    <Context.Provider value={value}>
       {children}
     </Context.Provider>
   );
