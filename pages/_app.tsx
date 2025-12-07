@@ -1,20 +1,20 @@
 import type { AppProps } from "next/app";
 
 import { HeroUIProvider } from "@heroui/system";
+import { Providers } from "@/components/providers";
 import { useRouter } from "next/router";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
-import { ContextProvider } from "@/components/context";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   return (
     <HeroUIProvider navigate={router.push}>
-      <ContextProvider>
+      <Providers>
         <Component {...pageProps} />
-      </ContextProvider>
+      </Providers>
     </HeroUIProvider>
   );
 }
