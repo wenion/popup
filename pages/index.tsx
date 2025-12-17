@@ -3,10 +3,10 @@ import { useAppContext } from "@/components/context";
 import { SignIn } from "@/components/signin";
 
 export default function IndexPage() {
-  const { user } = useAppContext();
+  const { profile } = useAppContext();
   return (
     <div className="relative flex flex-col w-xs bg-white">
-      {user ? <Home /> : <SignIn />}
+      {profile ? <Home /> : <SignIn />}
     </div>
   );
 }

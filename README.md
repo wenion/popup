@@ -51,6 +51,11 @@ public-hoist-pattern[]=*@heroui/*
 After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
 
 ### Build
+Create .env.local or .env file and set up NEXT_PUBLIC_HOMEPAGE variable
+```bash
+NEXT_PUBLIC_HOMEPAGE=
+```
+
 ```bash
 const nextConfig = {
   output: "export",

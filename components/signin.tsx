@@ -1,22 +1,14 @@
-import getConfig from "next/config";
 import Image from "next/image";
 
 export function SignIn() {
-  const { publicRuntimeConfig } = getConfig();
-  const loginPage = new URL(publicRuntimeConfig.loginPage);
-
   const onSignInClick = () => {
-    chrome.storage.sync.set({ session: null});
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      if (tab) {
-        if (tab.url === loginPage.href) {
-          window.close(); // closes the popup
-          return;
-        }
-        chrome.tabs.create({ url: loginPage.href });
-      }
-    });
+    const base = process.env.NEXT_PUBLIC_HOMEPAGE!;
+
+    const url = new URL("/login", base);
+    url.searchParams.set("from", "extension");
+    url.searchParams.set("ext", chrome.runtime.id);
+
+    chrome.tabs.create({ url: url.href });
   };
 
   return (

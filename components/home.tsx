@@ -1,15 +1,13 @@
 import { useMemo } from "react";
-import getConfig from "next/config";
 import Image from "next/image";
 
 import { useAppContext } from "@/components/context";
 
 export function Home() {
-  const { user } = useAppContext();
+  const { profile, captureOn, setCaptureOn } = useAppContext();
 
   const notice = "Welcome";
-  const { publicRuntimeConfig } = getConfig();
-  const homepage = new URL(publicRuntimeConfig.homepage);
+  const homepage = new URL(process.env.NEXT_PUBLIC_HOMEPAGE!);
 
   const onHomeClick = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -25,13 +23,22 @@ export function Home() {
   };
 
   const userName = useMemo(() => {
-    if (user && user.email) {
-      const username = user.email.split("@")[0];
-      const first = username.split(/[._\s-]+/)[0];
-      return first.charAt(0).toUpperCase() + first.slice(1);
+    return profile?.full_name || null;
+  }, [profile]);
+
+  const avatarUrl = useMemo(() => {
+    return profile?.avatar_url || null;
+  }, [profile]);
+
+  const toggleSwitch = () => {
+    if (captureOn === null) {
+      setCaptureOn(true);
+      return;
     }
-    return "";
-  }, [user]);
+
+    const next = !captureOn;
+    setCaptureOn(next);
+  };
 
   return (
     <div className={"w-full bg-white shadow-sm ring-1 ring-black/5"}>
@@ -46,6 +53,16 @@ export function Home() {
           unoptimized
         />
         <p className="px-4 text-xs text-slate-600">Track, analyse, and understand your writing habits</p>
+        {/* Avatar */}
+        <div className="flex h-8 w-8 rounded-full items-center justify-between">
+          {avatarUrl && (
+            <Image
+              src={avatarUrl}
+              alt={userName || "User"}
+              className="object-cover"
+            />
+          )}
+        </div>
       </div>
 
       {/* Body */}
@@ -57,6 +74,24 @@ export function Home() {
             <p className="text-lg font-medium text-slate-600 text-center">{notice}, {userName}!</p>
           </div>
         </div>
+      </div>
+      <div className="flex items-center justify-center w-full pt-4">
+        <button
+          type="button"
+          onClick={toggleSwitch}
+          className={`
+            relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer
+            ${captureOn ? "bg-emerald-600" : "bg-slate-900"}
+          `}
+        >
+          <span
+            className={`
+              inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200
+              ${captureOn ? "translate-x-6" : "translate-x-1"}
+            `}
+          />
+        </button>
+        <span className="ml-3 text-sm font-medium text-slate-700">{captureOn ? "Tracking On" : "Tracking Off"}</span>
       </div>
       <div className="flex py-2 items-center justify-center h-20 w-full">
         <button
