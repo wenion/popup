@@ -1,12 +1,15 @@
 import { Home } from "@/components/home";
+import { SignIn } from "@/components/sign-in";
+import { SiteAccessPrompt } from "@/components/site-access-prompt";
 import { useAppContext } from "@/components/context";
-import { SignIn } from "@/components/signin";
 
 export default function IndexPage() {
-  const { profile } = useAppContext();
+  const { profile, permissionGranted } = useAppContext();
   return (
     <div className="relative flex flex-col w-xs bg-white">
-      {profile ? <Home /> : <SignIn />}
+      {!profile && (<SignIn />)}
+      {profile && !permissionGranted && (<SiteAccessPrompt />)}
+      {profile && permissionGranted && (<Home />)}
     </div>
   );
 }
