@@ -19,6 +19,9 @@ export function SignIn() {
       {/* Body */}
       <div className="flex flex-col gap-4 px-8 py-4">
         <div className="flex flex-col gap-2">
+          <p className="text-sm text-gray-600">
+            Your session has expired. Please sign in again to continue.
+          </p>
           <Button size="sm" color="primary" onPress={onSignInClick}>Sign in</Button>
         </div>
       </div>
