@@ -1,9 +1,9 @@
 import type { AppProps } from "next/app";
-
-import { HeroUIProvider } from "@heroui/system";
-import { Providers } from "@/components/providers";
 import { useRouter } from "next/router";
 
+import { HeroUIProvider } from "@heroui/system";
+
+import { Providers } from "@/components/providers";
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
 

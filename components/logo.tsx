@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+
 import { getActiveIcon } from "@/shared/icons";
 
-export function Logo ({size}: {size?: number}) {
+export function Logo ({ size }: { size?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -19,5 +20,5 @@ export function Logo ({size}: {size?: number}) {
     ctx.putImageData(img, 0, 0);
   }, [size]);
 
-  return (<canvas ref={ref} width={size} height={size} />);
+  return <canvas ref={ref} width={size} height={size} />;
 };

@@ -1,9 +1,20 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 
 import type { Profile, ExtensionJwtPayload } from "@/components/types";
-import { getActiveIcon, getDefaultIcon, getCapturingIcon } from "@/shared/icons";
+import {
+  getActiveIcon,
+  getDefaultIcon,
+  getCapturingIcon
+} from "@/shared/icons";
 import { addGrantedOrigin, removeGrantedOrigin } from "@/shared/grantedOrigins";
 
 type ContextType = {
@@ -29,9 +40,7 @@ function decodeJwt(token: string): ExtensionJwtPayload | null {
     const [, payload] = token.split(".");
     if (!payload) return null;
 
-    return JSON.parse(
-      atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
-    );
+    return JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
   } catch {
     return null;
   }
@@ -64,10 +73,10 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
     });
 
     if (hasPermission) {
-      await chrome.action.setIcon({imageData: await getActiveIcon(), tabId: tab.id!});
+      await chrome.action.setIcon({imageData: getActiveIcon(), tabId: tab.id!});
     }
     else {
-      await chrome.action.setIcon({imageData: await getDefaultIcon(), tabId: tab.id!});
+      await chrome.action.setIcon({imageData: getDefaultIcon(), tabId: tab.id!});
     }
     _setPermissionGranted(hasPermission);
   }, []);
@@ -95,13 +104,13 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
 
   const checkCaptureOn  = useCallback(async (tab: chrome.tabs.Tab) => {
     try {
-      const res = await chrome.tabs.sendMessage(tab.id!, { type: "PING", tab: tab });
+      const res = await chrome.tabs.sendMessage(tab.id!, { type: "PING" });
       if (res.ok) {
-        await chrome.action.setIcon({ imageData: await getCapturingIcon(), tabId: tab.id! });
+        await chrome.action.setIcon({ imageData: getCapturingIcon(), tabId: tab.id! });
         _setCaptureOn(true);
       }
       else {
-        await chrome.action.setIcon({ imageData: await getActiveIcon(), tabId: tab.id! });
+        await chrome.action.setIcon({ imageData: getActiveIcon(), tabId: tab.id! });
         _setCaptureOn(false);
       }
     } catch (e) {
@@ -123,7 +132,7 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
     }
     else {
       try {
-        await chrome.tabs.sendMessage(tab.id!, { type: "REMOVE_CONTENT_SCRIPT", tab: tab });
+        await chrome.tabs.sendMessage(tab.id!, { type: "REMOVE_CONTENT_SCRIPT" });
         removeGrantedOrigin(tab.url!);
       } catch (e) {
         console.error("Error sending REMOVE_CONTENT_SCRIPT message", e);
@@ -137,8 +146,7 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
     chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       const tab = tabs[0];
       if (tab) {
-        checkPermissionGranted(tab)
-          .then(() => checkCaptureOn(tab));
+        checkPermissionGranted(tab).then(() => checkCaptureOn(tab));
       }
     });
 
@@ -174,18 +182,23 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
     }
   }, [payload]);
 
-  const value = useMemo<ContextType>(() => ({
+  const value = useMemo<ContextType>(
+    () => ({
+      profile,
+      payload,
+      captureOn,
+      setCaptureOn,
+      permissionGranted,
+      setPermissionGranted,
+    }), [
       profile,
       payload,
       captureOn,
       setCaptureOn,
       permissionGranted,
       setPermissionGranted
-    }), [profile, payload, captureOn, setCaptureOn, permissionGranted, setPermissionGranted]);
-
-  return (
-    <Context.Provider value={value}>
-      {children}
-    </Context.Provider>
+    ]
   );
+
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 }

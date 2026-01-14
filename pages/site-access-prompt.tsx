@@ -1,19 +1,28 @@
 import { useCallback } from "react";
+import { useRouter } from "next/router";
 import { Button } from "@heroui/button";
 
 import { useAppContext } from "@/components/context";
 
-export function SiteAccessPrompt() {
+export default function SiteAccessPrompt() {
+  const router = useRouter();
   const { setPermissionGranted } = useAppContext();
 
   const handleGrantClick = useCallback(async () => {
     setPermissionGranted(true);
-  }, [setPermissionGranted]);
+    router.replace("/");
+  }, [setPermissionGranted, router]);
+
+  const handleExitClick = useCallback(() => {
+    router.replace("/");
+  }, [router]);
 
   return (
-    <div className={"w-full bg-white shadow-sm ring-1 ring-black/5"}>
+    <main className="w-80 bg-white shadow-sm ring-1 ring-black/5">
       <div className="flex flex-col items-center justify-between p-4 border-b border-black/5">
-        <h2 className="text-xl font-semibold text-slate-900">Site access required</h2>
+        <h2 className="text-xl font-semibold text-slate-900">
+          Site access required
+        </h2>
       </div>
 
       {/* Body */}
@@ -26,7 +35,7 @@ export function SiteAccessPrompt() {
             Grant access
           </Button>
 
-          <Button size="sm" color="default" onPress={() => window.close()}>
+          <Button size="sm" color="default" onPress={handleExitClick}>
             Not now
           </Button>
         </div>
@@ -34,6 +43,6 @@ export function SiteAccessPrompt() {
           You can revoke site access anytime in Chrome Extension settings.
         </div>
       </div>
-    </div>
+    </main>
   );
 }

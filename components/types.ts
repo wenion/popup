@@ -4,11 +4,11 @@ export type Profile = {
   full_name: string;
   avatar_url: string;
   updated_at: string;
-}
+};
 
 export type ExtensionJwtPayload = {
   exp: number;
   sub: string;
   scope: string;
   iat: number;
-}
+};

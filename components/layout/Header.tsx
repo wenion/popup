@@ -1,4 +1,5 @@
 import { Button } from "@heroui/button";
+
 import { Logo } from "@/components/logo";
 
 export function Header() {
@@ -7,8 +8,10 @@ export function Header() {
   const onHomeClick = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
+
       if (tab) {
         if (tab.url === homepage.href) {
+
           window.close();
           return;
         }
@@ -18,11 +21,13 @@ export function Header() {
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
-      <Button isIconOnly onPress={onHomeClick} className="bg-transparent">
+    <div className="flex items-center justify-between p-4 border-b border-black/5">
+      <Button isIconOnly className="bg-transparent" onPress={onHomeClick}>
         <Logo size={36} />
       </Button>
-      <p className="px-4 text-xs text-slate-600">Track, analyse, and understand your writing habits</p>
+      <p className="px-4 text-xs text-slate-600">
+        Track, analyse, and understand your writing habits
+      </p>
     </div>
   );
 }
