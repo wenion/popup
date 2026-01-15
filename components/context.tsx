@@ -88,13 +88,10 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
     const url = new URL(tab.url);
     const originPattern = `${url.origin}/*`;
     if (value) {
-      const result =await chrome.permissions.request({
+      await chrome.permissions.request({
         permissions: ["scripting"],
         origins: [originPattern],
       });
-      if (result) {
-        chrome.action.openPopup({windowId: tab.windowId});
-      }
     }
     else {
       await chrome.permissions.remove({ permissions: ["scripting"], origins: [originPattern] });
