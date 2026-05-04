@@ -24,6 +24,8 @@ type ContextType = {
   setCaptureOn: (value: boolean) => void;
   permissionGranted: boolean | null;
   setPermissionGranted: (value: boolean) => void;
+  error: string | null;
+  setError: (value: string | null) => void;
 }
 const Context = createContext<ContextType | null>(null);
 
@@ -56,6 +58,7 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
   const [payload, setPayload] = useState<ExtensionJwtPayload | null>(null);
   const [captureOn, _setCaptureOn] = useState<boolean | null>(null);
   const [permissionGranted, _setPermissionGranted] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const getActiveTab = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -187,13 +190,16 @@ export function ContextProvider({ children }: { children: React.ReactNode; }) {
       setCaptureOn,
       permissionGranted,
       setPermissionGranted,
+      error,
+      setError,
     }), [
       profile,
       payload,
       captureOn,
       setCaptureOn,
       permissionGranted,
-      setPermissionGranted
+      setPermissionGranted,
+      error,
     ]
   );
 

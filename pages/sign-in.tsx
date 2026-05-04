@@ -10,7 +10,13 @@ export default function SignIn() {
   const router = useRouter();
 
   useEffect(() => {
-    if (profile) router.replace("/")
+    if (
+      profile &&
+      typeof profile.email === "string" &&
+      typeof profile.full_name === "string" &&
+      typeof profile.avatar_url === "string" &&
+      typeof profile.updated_at === "string"
+    ) router.replace("/")
   }, [profile]);
 
   const onSignInClick = async() => {
