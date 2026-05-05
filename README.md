@@ -56,19 +56,10 @@ Create .env.local or .env file and set up NEXT_PUBLIC_HOMEPAGE variable
 NEXT_PUBLIC_HOMEPAGE=
 ```
 
+Environment variables are loaded with `.env.local` taking highest priority, followed by the environment-specific `.env.*.local`, then `.env.*`, and finally `.env`
+
 ```bash
-const nextConfig = {
-  output: "export",
-
-  // Optional: Change the output directory `out` -> `dist`
-  distDir: "dist",
-
-  // Make all asset URLs include /dist so they work when popup is dist/index.html
-  assetPrefix: "/dist",
-  basePath: "/dist",
-  reactStrictMode: true,
-  images: { unoptimized: true },
-};
+npm run build
 ```
 
 copy dist/ to extension folder

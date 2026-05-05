@@ -1,6 +1,8 @@
 /**
- * Check environment variables when building
- * priority: .env.local > .env.development or .env.production > .env 
+ *  Load order
+ *  .env.local -> highest priority
+ *  .env.development
+ *  .env
  * 
  */
 function requireEnv(name) {
